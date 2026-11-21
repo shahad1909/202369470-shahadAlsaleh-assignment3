@@ -655,10 +655,6 @@ from step 4 was still in the file next to the new one, so
 - **GitHub API rate limit:** unauthenticated requests are limited to 60
   per hour per IP address, and each page load uses 6 (2 per project).
   If the limit is reached, the friendly error message is shown.
-- **Sorting by date uses the repository creation date:** all three
-  repositories were uploaded to GitHub on the same day, so "Newest" and
-  "Oldest" currently give a similar order. The sort uses when the repo
-  was created on GitHub, not when the project was actually done.
 - **Cache lifetime** is controlled by GitHub Pages and cannot be changed.
 - **No backend:** the contact form validates and confirms, but does not
   send the message anywhere (matches the assignment scope).
