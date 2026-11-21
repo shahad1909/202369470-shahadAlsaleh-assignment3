@@ -148,9 +148,34 @@
   <section id="projects" class="section projects">
     <div class="section-container">
       <h2 class="section-title">Projects</h2>
+      <!-- Project controls: filter by category + sort -->
+      <div class="project-controls">
+
+        <!-- Filter buttons: data-filter must match data-category on the projects -->
+        <div class="filter-group" role="group" aria-label="Filter projects by category">
+          <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-btn" data-filter="software" aria-pressed="false">Software</button>
+          <button type="button" class="filter-btn" data-filter="hardware" aria-pressed="false">Hardware</button>
+          <button type="button" class="filter-btn" data-filter="ml" aria-pressed="false">Machine Learning</button>
+        </div>
+
+        <!-- Sort dropdown -->
+        <label class="sort-label" for="sort-select">
+          Sort by
+          <select id="sort-select" class="sort-select">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="name">Name (A–Z)</option>
+          </select>
+        </label>
+
+      </div>
+
+      <!-- Shown only when no project matches the filter -->
+      <p class="empty-state" id="empty-state" hidden>No projects in this category yet.</p>
       <div class="projects-list">
 
-        <article class="project-row">
+        <article class="project-row" data-category="software">
           <div class="project-media">
             <div class="project-thumb thumb-01" aria-hidden="true">
               <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -194,7 +219,7 @@
           </a>
         </article>
 
-        <article class="project-row">
+        <article class="project-row" data-category="hardware">
           <div class="project-media">
             <div class="project-thumb thumb-02" aria-hidden="true">
               <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -241,7 +266,7 @@
           </a>
         </article>
 
-        <article class="project-row">
+        <article class="project-row" data-category="ml">
           <div class="project-media">
             <div class="project-thumb thumb-03" aria-hidden="true">
               <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
