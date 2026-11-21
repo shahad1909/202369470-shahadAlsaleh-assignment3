@@ -149,9 +149,7 @@ changes:
 | A11 | Claude (Claude Opus 5.5) | 2026-11-21 | Draft of this report. | `docs/ai-usage-report.md` | Wrote the benefits and challenges in my own words, reviewed the learning outcomes list, and checked every statement. |
 
 The full, unedited conversation (C01) is included in the AI Evidence ZIP
-submitted on Blackboard. The code templates with blanks (A01–A08) are
-inside that conversation, and the original documentation drafts
-(A09–A11) are in the `artifacts/` folder of the ZIP.
+submitted on Blackboard. The original AI outputs before my edits (A01–A11), including the code templates with blanks and the documentation drafts, are in the `artifacts/` folder of the ZIP.
 
 ---
 
