@@ -685,6 +685,95 @@ img {
   50%      { opacity: 0.4; }
 }
 
+/* Project controls: filter buttons (left) + sort dropdown (right) */
+.project-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;          /* lets the items move to a new line on small screens */
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Filter buttons: pill shape, same style family as .tech-tags */
+.filter-btn {
+  padding: 8px 18px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--rose-deep);
+  color: var(--rose-deep);
+}
+
+/* The selected filter (JS adds/removes the .active class) */
+.filter-btn.active {
+  background: var(--rose-deep);
+  border-color: var(--rose-deep);
+  color: var(--surface);
+}
+
+/* Visible outline for keyboard users (Tab key) */
+.filter-btn:focus-visible {
+  outline: 2px solid var(--lilac-deep);
+  outline-offset: 2px;
+}
+
+/* Sort dropdown */
+.sort-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.sort-select {
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.sort-select:focus-visible {
+  outline: 2px solid var(--lilac-deep);
+  outline-offset: 2px;
+}
+
+/* Message shown when a filter has no matching projects */
+.empty-state {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* .project-row uses display: grid, which overrides the hidden attribute,
+   so this stronger rule makes sure hidden projects really disappear */
+.project-row[hidden] {
+  display: none;
+}
+
+
+
 /* =========================================
    Contact Section
    ========================================= */
@@ -883,6 +972,14 @@ img {
 
   .contact-form {
     padding: 28px;
+  }
+
+  .sort-label {
+      width: 100%;
+  }
+
+  .sort-select {
+      flex: 1;       /* the dropdown stretches to fill the remaining width */
   }
 
   .project-row {
