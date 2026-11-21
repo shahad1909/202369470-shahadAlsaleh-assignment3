@@ -241,6 +241,89 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* Project Filter + Sort (both work together) */
+  const projectsList = document.querySelector('.projects-list');
+  const projectRows = Array.from(projectsList.querySelectorAll('.project-row'));
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const sortSelect = document.getElementById('sort-select');
+  const emptyState = document.getElementById('empty-state');
+
+  // Current state of the controls (must match the defaults in index.html)
+  let currentFilter = 'all';
+  let currentSort = 'newest';
+
+  // Returns true if a project should be visible with the current filter
+  function matchesFilter(row) {
+    return currentFilter === 'all' || row.dataset.category === currentFilter;
+  }
+
+  // Compares two projects for .sort():
+  // negative → a comes first, positive → b comes first, 0 → keep order
+  function compareProjects(a, b) {
+
+    // Sort by name (A–Z)
+    if (currentSort === 'name') {
+      const nameA = a.querySelector('h3').textContent;
+      const nameB = b.querySelector('h3').textContent;
+      return nameA.localeCompare(nameB);
+    }
+
+    // Sort by GitHub creation date
+    const dateA = a.dataset.created;
+    const dateB = b.dataset.created;
+
+    // Projects without a date (GitHub request failed) always go last
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+
+    // Subtracting dates gives the difference in milliseconds (older first)
+    const difference = new Date(dateA) - new Date(dateB);
+    return currentSort === 'oldest' ? difference : -difference;
+  }
+
+
+  // Applies the current filter and sort, then updates the page
+  function updateProjects() {
+    const sortedRows = [...projectRows].sort(compareProjects);
+    let visibleCount = 0;
+
+    sortedRows.forEach(row => {
+      const isVisible = matchesFilter(row);
+      row.hidden = !isVisible;
+
+      if (isVisible) {
+        visibleCount++;
+      }
+
+      // appendChild moves the existing card, so the page follows the sorted order
+      projectsList.appendChild(row);
+    });
+
+    // Show the message only when no project matches
+    emptyState.hidden = visibleCount > 0;
+  }
+
+  // Filter buttons: update the state, the active style, and the list
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentFilter = button.dataset.filter;
+
+      filterButtons.forEach(btn => {
+        const isActive = btn === button;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
+      });
+
+      updateProjects();
+    });
+  });
+
+  // Sort dropdown
+  sortSelect.addEventListener('change', () => {
+    currentSort = sortSelect.value;
+    updateProjects();
+  });
 
   /* GitHub Repo Info (fetched from the public GitHub API) */
   const repoMetaEls = document.querySelectorAll('.repo-meta[data-repo]');
@@ -299,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Wait until every request has finished (success or error) before sorting
   Promise.allSettled(repoRequests).then(() => {
-    // Step 4: sort the projects here, once all dates are available
+    updateProjects();
   });
 
 
