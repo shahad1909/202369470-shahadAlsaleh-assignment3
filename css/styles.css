@@ -660,6 +660,15 @@ img {
   color: var(--error);
 }
 
+/* Language breakdown line (second GitHub API request) */
+.project-body .repo-languages {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--rose-deep);
+  margin-top: -8px;
+  margin-bottom: 14px;
+}
+
 /* the Try again button that is shown after a failed GitHub request */
 .retry-btn {
   margin-left: 6px;

@@ -1,8 +1,9 @@
 /*
    script.js
-   Handles: dark/light theme toggle (localStorage), mobile nav toggle,
+   Handles: dark/light theme toggle and saved settings (localStorage), mobile nav toggle,
    smooth scrolling, time-based greeting, contact form (validation, live feedback, animations),
-   expandable project details, GitHub repo info (API), and footer year.
+   expandable project details, project filter + sort (saved between visits),
+   GitHub repo info and language breakdown (API), visit timer, and footer year.
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -352,12 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show the restored filter right away (GitHub dates will re-sort the list when they arrive)
   updateProjects();
 
-  // Sort dropdown
-  sortSelect.addEventListener('change', () => {
-    currentSort = sortSelect.value;
-    updateProjects();
-  });
-
   /* GitHub Repo Info (fetched from the public GitHub API) */
   const repoMetaEls = document.querySelectorAll('.repo-meta[data-repo]');
 
@@ -368,6 +363,62 @@ document.addEventListener('DOMContentLoaded', () => {
       day: 'numeric'
     });
   }
+
+  // Turns GitHub's { language: bytes } object into percentages, largest first.
+  // Keeps the top 3 languages and groups the rest into "Other".
+  function getLanguagePercentages(languageBytes) {
+    const totalBytes = Object.values(languageBytes).reduce((sum, bytes) => sum + bytes, 0);
+
+    // Empty repo (or no detectable code): nothing to show
+    if (totalBytes === 0) {
+      return [];
+    }
+
+    const languages = Object.entries(languageBytes)
+      .map(([name, bytes]) => ({ name, percent: (bytes / totalBytes) * 100 }))
+      .sort((a, b) => b.percent - a.percent);   // largest first
+
+    const topLanguages = languages.slice(0, 3);
+    const otherPercent = languages
+      .slice(3)
+      .reduce((sum, language) => sum + language.percent, 0);
+
+    if (otherPercent > 0) {
+      topLanguages.push({ name: 'Other', percent: otherPercent });
+    }
+
+    return topLanguages;
+  }
+
+  // Loads one repo's language breakdown and shows it under the repo info.
+  // This is extra information, so if it fails the line is simply not shown.
+  async function loadRepoLanguages(metaEl, repo) {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${repo}/languages`);
+
+      if (!response.ok) {
+        throw new Error(`GitHub responded with status ${response.status}`);
+      }
+
+      const languages = getLanguagePercentages(await response.json());
+
+      if (languages.length === 0) {
+        return;   // nothing to show
+      }
+
+      const languagesEl = document.createElement('p');
+      languagesEl.className = 'repo-languages';
+      languagesEl.textContent = languages
+        .map(language => `${language.name} ${language.percent.toFixed(1)}%`)
+        .join(' · ');
+
+      metaEl.after(languagesEl);   // place it right below the dates line
+    } catch (error) {
+      console.warn(`Language breakdown unavailable for ${repo}:`, error);
+    }
+  }
+
+
 
   async function loadRepoInfo(metaEl) {
     const repo = metaEl.dataset.repo;
@@ -385,6 +436,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const projectRow = metaEl.closest('.project-row');
       projectRow.dataset.created = data.created_at;
       metaEl.textContent = `Created ${formatDate(data.created_at)} · Updated ${formatDate(data.pushed_at)}`;
+
+      // Load the language breakdown in the background (no await, so the dates show right away)
+      loadRepoLanguages(metaEl, repo);
 
     } catch (error) {
       metaEl.textContent = "We couldn't fetch GitHub data. Check your connection, then click Try again.";
