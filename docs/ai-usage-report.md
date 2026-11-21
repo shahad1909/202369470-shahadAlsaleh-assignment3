@@ -108,14 +108,6 @@ changes:
 - **Found a missing section in the AI's draft:** the first README draft
   left out the Accessibility section. I noticed it and asked for it to
   be added back, updated with the Assignment 3 changes.
-- **Corrected the AI's draft for accuracy:** the README draft said I
-  found all errors myself. I changed it to say that I found the
-  misplaced bracket myself, while the duplicated code was found by
-  Claude's review.
-- **Found an error myself:** after pasting the project renumbering code,
-  I saw the red error highlighting in the editor and asked about it
-  before testing. It was an extra `}` that would have stopped all
-  JavaScript.
 - **Investigated a bug with DevTools:** when the language percentages
   did not appear, I checked the Network tab and the Response, and found
   that GitHub returned `{}`. The real cause was that my project
