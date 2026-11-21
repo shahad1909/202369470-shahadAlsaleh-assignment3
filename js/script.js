@@ -264,7 +264,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const data = await response.json();
+
+      // Save the creation date on the project card so it can be sorted by date later
+      const projectRow = metaEl.closest('.project-row');
+      projectRow.dataset.created = data.created_at;
       metaEl.textContent = `Created ${formatDate(data.created_at)} · Updated ${formatDate(data.pushed_at)}`;
+
     } catch (error) {
       metaEl.textContent = "We couldn't fetch GitHub data. Check your connection, then click Try again.";
       metaEl.classList.add('is-error');
@@ -289,7 +294,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  repoMetaEls.forEach(loadRepoInfo);
+// Load all repos at the same time and keep each request's Promise
+  const repoRequests = Array.from(repoMetaEls).map(loadRepoInfo);
+
+  // Wait until every request has finished (success or error) before sorting
+  Promise.allSettled(repoRequests).then(() => {
+    // Step 4: sort the projects here, once all dates are available
+  });
+
 
   /* Footer Year */
   document.getElementById('year').textContent = new Date().getFullYear();
