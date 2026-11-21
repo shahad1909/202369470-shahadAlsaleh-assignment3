@@ -296,6 +296,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (isVisible) {
         visibleCount++;
+      
+
+      // Number the visible projects in their current order (01, 02, 03...)
+        row.querySelector('.project-index').textContent = String(visibleCount).padStart(2, '0');
       }
 
       // appendChild moves the existing card, so the page follows the sorted order
