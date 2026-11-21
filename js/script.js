@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
         metaEl.classList.remove('is-error');
         metaEl.classList.add('is-loading');
         metaEl.textContent = 'Loading GitHub info…';
-        loadRepoInfo(metaEl);
+        loadRepoInfo(metaEl).then(updateProjects);
       });
 
       metaEl.append(' ', retryBtn);
