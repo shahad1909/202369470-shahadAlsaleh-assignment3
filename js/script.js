@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /*Smooth Scrolling Between Sections */
+/* Smooth Scrolling Between Sections */
   const navAnchors = document.querySelectorAll('a[href^="#"]');
-  const navbarHeight = document.querySelector('.navbar').offsetHeight;
+  const navbar = document.querySelector('.navbar');
 
   navAnchors.forEach(anchor => {
     anchor.addEventListener('click', (e) => {
@@ -79,7 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!targetEl) return;
 
       e.preventDefault();
-      const targetPosition = targetEl.getBoundingClientRect().top + window.pageYOffset - navbarHeight + 1;
+
+      // Measure the navbar on click (not on page load): this avoids forcing an early
+      // layout calculation, and stays correct if the navbar size changes (e.g. rotating a phone)
+      const navbarHeight = navbar.offsetHeight;
+      const targetPosition = targetEl.getBoundingClientRect().top + window.scrollY - navbarHeight + 1;
 
       window.scrollTo({
         top: targetPosition,

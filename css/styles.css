@@ -5,10 +5,10 @@
 
   --ink: #2b2230;
   --ink-soft: #5c4f5a;
-  --muted: #8c7c89;
+  --muted: #71646f;
 
   --rose: #e39ab2;
-  --rose-deep: #c76e8c;
+  --rose-deep: #ad4367;
   --lilac: #cdb9e6;
   --lilac-deep: #a683c9;
   --sage: #a9d2ba;
@@ -26,7 +26,7 @@
   --shadow-soft: 0 20px 40px -20px rgba(199, 110, 140, 0.28);
 
   --nav-bg: rgba(251, 246, 248, 0.82);
-  --error: #c15c73;
+  --error: #af435b;
   --success-bg: #a9d2ba;
   --success-text: #3f6b52;
 }
