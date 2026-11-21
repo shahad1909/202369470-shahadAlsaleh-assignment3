@@ -6,6 +6,22 @@
 */
 
 document.addEventListener('DOMContentLoaded', () => {
+  /* Saved settings (localStorage), shared by the theme and the project controls */
+  function readSetting(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      return null;   // storage unavailable: behave as if nothing was saved
+    }
+  }
+
+  function saveSetting(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      // Storage unavailable (e.g. private browsing): the setting still works for this visit
+    }
+  }
 
   /* Dark/Light Theme Toggle (saved in localStorage) */
   const root = document.documentElement;
@@ -25,31 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
   }
 
-  function getSavedTheme() {
-    try {
-      return localStorage.getItem('theme');
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function saveTheme(theme) {
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (error) {
-      // Storage unavailable (e.g. private browsing): theme still works for this visit
-    }
-  }
 
   // On page load: saved choice first, otherwise follow the device setting
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(getSavedTheme() || (prefersDark ? 'dark' : 'light'));
+  applyTheme(readSetting('theme') || (prefersDark ? 'dark' : 'light'));
 
   // On click: switch theme and remember the choice
   themeToggle.addEventListener('click', () => {
     const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(newTheme);
-    saveTheme(newTheme);
+    saveSetting('theme', newTheme);
   });
 
   /*Mobile Navigation Toggle*/
@@ -304,20 +305,52 @@ document.addEventListener('DOMContentLoaded', () => {
     emptyState.hidden = visibleCount > 0;
   }
 
-  // Filter buttons: update the state, the active style, and the list
+  // Marks one filter button as active (style + screen readers)
+  function setActiveFilter(activeButton) {
+    filterButtons.forEach(btn => {
+      const isActive = btn === activeButton;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  // Filter buttons: update the state, save it, and refresh the list
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
       currentFilter = button.dataset.filter;
-
-      filterButtons.forEach(btn => {
-        const isActive = btn === button;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-pressed', String(isActive));
-      });
-
+      setActiveFilter(button);
+      saveSetting('projectFilter', currentFilter);
       updateProjects();
     });
   });
+
+  // Sort dropdown: update the state, save it, and refresh the list
+  sortSelect.addEventListener('change', () => {
+    currentSort = sortSelect.value;
+    saveSetting('projectSort', currentSort);
+    updateProjects();
+  });
+
+  // Restore the visitor's last choices, but only if they are still valid options
+  const savedFilterButton = document.querySelector(
+    `.filter-btn[data-filter="${readSetting('projectFilter')}"]`
+  );
+
+  if (savedFilterButton) {
+    currentFilter = savedFilterButton.dataset.filter;
+    setActiveFilter(savedFilterButton);
+  }
+
+  const savedSort = readSetting('projectSort');
+  const sortOptions = Array.from(sortSelect.options).map(option => option.value);
+
+  if (sortOptions.includes(savedSort)) {
+    currentSort = savedSort;
+    sortSelect.value = savedSort;   // show the saved option in the dropdown
+  }
+
+  // Show the restored filter right away (GitHub dates will re-sort the list when they arrive)
+  updateProjects();
 
   // Sort dropdown
   sortSelect.addEventListener('change', () => {
