@@ -910,6 +910,12 @@ img {
   border-top: 1px solid var(--line);
 }
 
+.visit-timer {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;   /* every digit has the same width, so the text doesn't shake */
+}
+
 /* Responsive — Tablet */
 @media (max-width: 768px) {
   .section {

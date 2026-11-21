@@ -418,6 +418,31 @@ document.addEventListener('DOMContentLoaded', () => {
     updateProjects();
   });
 
+  /* Visit Timer: shows how long the visitor has been on the page */
+  const visitTimerEl = document.getElementById('visit-timer');
+  const visitStart = Date.now();
+
+  // Turns a number of seconds into "45s" or "2m 05s"
+  function formatDuration(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    if (minutes === 0) {
+      return `${seconds}s`;
+    }
+
+    return `${minutes}m ${String(seconds).padStart(2, '0')}s`;
+  }
+
+  // Uses the start time (not a counter), so the value stays correct
+  // even if the browser slows timers down in a background tab
+  function updateVisitTimer() {
+    const elapsedSeconds = Math.floor((Date.now() - visitStart) / 1000);
+    visitTimerEl.textContent = `You've been here for ${formatDuration(elapsedSeconds)}`;
+  }
+
+  updateVisitTimer();
+  setInterval(updateVisitTimer, 1000);
 
   /* Footer Year */
   document.getElementById('year').textContent = new Date().getFullYear();
