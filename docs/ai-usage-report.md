@@ -120,6 +120,11 @@ changes:
 - **Reviewed all documentation:** I read the README, technical
   documentation, and this report, checked them against what I actually
   did, and wrote the parts marked for me in my own words.
+  - **Caught an inaccurate AI statement:** Claude said that "Newest" and
+  "Oldest" would give a similar order because all repositories were
+  created on the same day. I tested it and saw that the orders were
+  different, because `created_at` includes the exact time. I corrected
+  the technical documentation.
 
 ---
 
