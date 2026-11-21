@@ -160,10 +160,7 @@ assignment. Claude explained each feature in Arabic first, then gave me
 the code with blanks that I filled in myself, and reviewed my answers
 before each commit. I made my own decisions along the way: I replaced
 the suggested GitHub "stars" with a language breakdown because stars are
-not meaningful for student projects, chose `Promise.allSettled` instead
-of the suggested `Promise.all`, noticed a misplaced bracket myself from
-the editor's error highlighting, and fixed duplicated code that Claude
-found during review. All AI-assisted commits are
+not meaningful for student projects. All AI-assisted commits are
 marked with `Assisted-by: Claude (Claude Opus 5.5)`.
 
 Getting the explanation first gave me a clear picture of the concept before I had to apply it, so when I filled in the blanks I understood why each answer was correct instead of just guessing.
